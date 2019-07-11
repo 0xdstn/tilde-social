@@ -160,7 +160,7 @@ def showFollowers(user):
 def about():
     info('Version:      1.0.2')
     info('Author:       ~dustin')
-    #info('Source:       https://github.com/0xdustin/tilde-social')
+    info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
 
 def usage():
