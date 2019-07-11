@@ -158,7 +158,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.2')
+    info('Version:      1.0.3')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
@@ -337,10 +337,18 @@ def post():
 
             # Write to the post log
             postFile = open(postsPath,'a')
-            postFile.write(id + ' PST ' + sys.argv[2] + '\n')
+
+            # Make sure we get the full message even if there were no quotes
+            pieces = sys.argv
+            pieces.pop(0)
+            pieces.pop(0)
+            text = ' '.join(pieces)
+
+            postFile.write(id + ' PST ' + text + '\n')
+
             postFile.close()
 
-            success('Posted: ' + sys.argv[2])
+            success('Posted: ' + text)
         else:
             error('No post text provided')
     else:
