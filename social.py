@@ -84,7 +84,9 @@ def getDisplayDate(ts):
 
 def printPost(line,username):
     pieces = line.split(' PST ')
-    if len(pieces) == 2:
+    now = round(time.time() * 1000)
+    # Make sure it isn't malformed or in the future
+    if len(pieces) == 2 and int(pieces[0]) <= now:
         info('~' + username + ' ' + getDisplayDate(pieces[0]))
         lines = pieces[1].split('\\n')
         for l in lines:
@@ -164,7 +166,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.5')
+    info('Version:      1.0.6')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
@@ -256,7 +258,7 @@ def feed():
                 for pst in postsFile:
                     pst = pst.strip()
                     postNumber = postNumber + 1
-                    userPosts.append(pst + '---' + u)
+                    userPosts.append(pst + 'SPLT' + u)
 
                     # Stop at 20
                     if postNumber == 20:
@@ -274,7 +276,7 @@ def feed():
         for pst in postsFile:
             pst = pst.strip()
             postNumber = postNumber + 1
-            userPosts.append(pst + '---' + username)
+            userPosts.append(pst + 'SPLT' + username)
 
             # Stop at 20
             if postNumber == 20:
@@ -286,7 +288,7 @@ def feed():
         displayed = 0
         for post in sorted(userPosts):
 
-            parts = post.split('---')
+            parts = post.split('SPLT')
 
             if printPost(parts[0],parts[1]):
                 displayed = displayed + 1
@@ -311,7 +313,7 @@ def local():
             for pst in postsFile:
                 pst = pst.strip()
                 postNumber = postNumber + 1
-                userPosts.append(pst + '---' + u)
+                userPosts.append(pst + 'SPLT' + u)
 
                 # Stop at 20
                 if postNumber == 20:
@@ -329,7 +331,7 @@ def local():
             break
     displayed = 0
     for post in reversed(toDisplay):
-        parts = post.split('---')
+        parts = post.split('SPLT')
         if printPost(parts[0],parts[1]):
             displayed = displayed + 1
             print('')
@@ -436,11 +438,11 @@ def mentions():
                 postsFile = open(postsPath.replace(username,u),'r')
                 for line in postsFile:
                     if '~' + username in line and ' PST ' in line:
-                        posts.append(line + '---' + u)
+                        posts.append(line + 'SPLT' + u)
                 postsFile.close()
 
         for post in sorted(posts):
-            parts = post.split('---')
+            parts = post.split('SPLT')
 
             printPost(parts[0],parts[1])
             print('')
