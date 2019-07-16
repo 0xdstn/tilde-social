@@ -83,8 +83,9 @@ def getDisplayDate(ts):
 
 def printPost(line,username):
     pieces = line.split(' PST ')
-    info('~' + username + ' ' + getDisplayDate(pieces[0]))
-    print(pieces[1])
+    if len(pieces) == 2:
+        info('~' + username + ' ' + getDisplayDate(pieces[0]))
+        print(pieces[1])
 
 def showProfile(user):
 
@@ -158,7 +159,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.3')
+    info('Version:      1.0.4')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
