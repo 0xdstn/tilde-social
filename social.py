@@ -166,7 +166,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.6')
+    info('Version:      1.0.7')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
@@ -228,10 +228,24 @@ def init():
         error(rootDir + ' already exists')
 
 def userList():
+    # Get the user's following list
+    following = ''
+    if os.path.exists(rootDir):
+        followingFile = open(followingPath,'r')
+        following = followingFile.read()
+        followingFile.close()
+
+    # Loop through home directories and find social users to display
     users = os.listdir('/home')
     for u in users:
         if os.path.exists(rootDir.replace(username,u)):
-            print(u)
+            followingFile = open(followingPath.replace(username,u),'r')
+            userFollowing = followingFile.read()
+            followingFile.close()
+            isFollowing = ('', inf + ' [following]' + end)[u in following]
+            followsYou = ('', suc + ' [follows you]' + end)[username in userFollowing]
+            isMe = ('', wrn + ' [this is you!]' + end)[u == username]
+            print('~' + u + isFollowing + followsYou + isMe)
 
 def me():
     if userExists():
