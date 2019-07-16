@@ -4,6 +4,7 @@ import sys
 import os
 import getpass
 import time
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -85,7 +86,11 @@ def printPost(line,username):
     pieces = line.split(' PST ')
     if len(pieces) == 2:
         info('~' + username + ' ' + getDisplayDate(pieces[0]))
-        print(pieces[1])
+        lines = pieces[1].split('\\n')
+        for l in lines:
+            print(l)
+        return True
+    return False
 
 def showProfile(user):
 
@@ -159,19 +164,19 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.4')
+    info('Version:      1.0.5')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
 
 def usage():
-    print('Usage: social [command]')
+    print('Usage: timeline [command]')
     print('')
     print('Commands:')
     print('  init                              Initialize your profile')
-    print('  users                             View a list of uesrs who have a profile')
-    print('  timeline                          View a timeline of users you follow')
-    print('  local                             View a timeline of all users')
+    print('  users                             View a list of users who have a profile')
+    print('  feed                              View a feed of users you follow')
+    print('  local                             View a feed of all users')
     print('  me                                View your profile')
     print('  following                         View a list of users you follow')
     print('  followers                         View a list of users who follow you')
@@ -232,7 +237,7 @@ def me():
     else:
         noProfile()
 
-def timeline():
+def feed():
     if os.path.exists(rootDir):
         userPosts = []
         followingFile = open(followingPath,'r')
@@ -280,15 +285,12 @@ def timeline():
         # Loop through posts sorted by time, display 20 most recent
         displayed = 0
         for post in sorted(userPosts):
-            displayed = displayed + 1
 
             parts = post.split('---')
 
-            printPost(parts[0],parts[1])
-            print('')
-
-            if displayed == 20:
-                break
+            if printPost(parts[0],parts[1]):
+                displayed = displayed + 1
+                print('')
     else:
         noProfile()
 
@@ -319,16 +321,20 @@ def local():
 
     # Loop through posts sorted by time, display 20 most recent
     displayed = 0
-    for post in sorted(userPosts):
+    toDisplay = []
+    for post in reversed(sorted(userPosts)):
         displayed = displayed + 1
-
-        parts = post.split('---')
-
-        printPost(parts[0],parts[1])
-        print('')
-
+        toDisplay.append(post)
         if displayed == 20:
             break
+    displayed = 0
+    for post in reversed(toDisplay):
+        parts = post.split('---')
+        if printPost(parts[0],parts[1]):
+            displayed = displayed + 1
+            print('')
+            if displayed == 20:
+                break
 
 def post():
     if userExists():
@@ -345,7 +351,7 @@ def post():
             pieces.pop(0)
             text = ' '.join(pieces)
 
-            postFile.write(id + ' PST ' + text + '\n')
+            postFile.write(id + ' PST ' + text.replace('\n','\\n') + '\n')
 
             postFile.close()
 
@@ -455,7 +461,8 @@ else:
     elif cmd == 'about': about()
     elif cmd == 'users': userList()
     elif cmd == 'me': me()
-    elif cmd == 'timeline': timeline()
+    elif cmd == 'feed': feed()
+    elif cmd == 'timeline': feed()
     elif cmd == 'local': local()
     elif cmd == 'mentions': mentions()
     elif cmd == 'post': post()
