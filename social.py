@@ -87,10 +87,12 @@ def printPost(line,username):
     now = round(time.time() * 1000)
     # Make sure it isn't malformed or in the future
     if len(pieces) == 2 and int(pieces[0]) <= now:
+        print(end)
         info('~' + username + ' ' + getDisplayDate(pieces[0]))
         lines = pieces[1].split('\\n')
         for l in lines:
-            print(l)
+            if len(l) > 0:
+                print(l.rstrip() + end)
         return True
     return False
 
@@ -124,7 +126,6 @@ def showProfile(user):
             if displayed == 20:
                 break
         for pst in reversed(posts):
-            print('')
             printPost(pst,user)
     else:
         error('User ~' + user + ' does not have an account')
@@ -166,7 +167,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.7')
+    info('Version:      1.0.8')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
@@ -306,7 +307,6 @@ def feed():
 
             if printPost(parts[0],parts[1]):
                 displayed = displayed + 1
-                print('')
     else:
         noProfile()
 
@@ -348,7 +348,6 @@ def local():
         parts = post.split('SPLT')
         if printPost(parts[0],parts[1]):
             displayed = displayed + 1
-            print('')
             if displayed == 20:
                 break
 
@@ -459,7 +458,6 @@ def mentions():
             parts = post.split('SPLT')
 
             printPost(parts[0],parts[1])
-            print('')
     else:
         noProfile()
 
