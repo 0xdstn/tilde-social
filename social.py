@@ -167,7 +167,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.8')
+    info('Version:      1.0.9')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
@@ -267,17 +267,11 @@ def feed():
             if os.path.exists(rootDir.replace(username,u)):
 
                 postsFile = open(postsPath.replace(username,u), 'r')
-                postNumber = 0
 
                 # Loop through user's posts
                 for pst in postsFile:
                     pst = pst.strip()
-                    postNumber = postNumber + 1
                     userPosts.append(pst + 'SPLT' + u)
-
-                    # Stop at 20
-                    if postNumber == 20:
-                        break
 
                 postsFile.close()
 
@@ -285,17 +279,11 @@ def feed():
 
         # Include the user posts
         postsFile = open(postsPath, 'r')
-        postNumber = 0
 
         # Loop through user's posts
         for pst in postsFile:
             pst = pst.strip()
-            postNumber = postNumber + 1
             userPosts.append(pst + 'SPLT' + username)
-
-            # Stop at 20
-            if postNumber == 20:
-                break
 
         postsFile.close()
 
@@ -307,6 +295,10 @@ def feed():
 
             if printPost(parts[0],parts[1]):
                 displayed = displayed + 1
+
+            # Stop at 20
+            if displayed == 20:
+                break
     else:
         noProfile()
 
@@ -321,17 +313,11 @@ def local():
         if os.path.exists(rootDir.replace(username,u)):
 
             postsFile = open(postsPath.replace(username,u), 'r')
-            postNumber = 0
 
             # Loop through user's posts
             for pst in postsFile:
                 pst = pst.strip()
-                postNumber = postNumber + 1
                 userPosts.append(pst + 'SPLT' + u)
-
-                # Stop at 20
-                if postNumber == 20:
-                    break
 
             postsFile.close()
 
