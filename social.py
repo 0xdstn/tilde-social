@@ -167,7 +167,7 @@ def showFollowers(user):
 ###
 
 def about():
-    info('Version:      1.0.9')
+    info('Version:      1.0.10')
     info('Author:       ~dustin')
     info('Source:       https://github.com/0xdustin/tilde-social')
     info('More info:    http://tilde.town/~dustin/#wiki/tilde-social')
@@ -287,18 +287,20 @@ def feed():
 
         postsFile.close()
 
-        # Loop through posts sorted by time, display 20 most recent
         displayed = 0
-        for post in sorted(userPosts):
-
-            parts = post.split('SPLT')
-
-            if printPost(parts[0],parts[1]):
-                displayed = displayed + 1
-
-            # Stop at 20
+        toDisplay = []
+        for post in reversed(sorted(userPosts)):
+            displayed = displayed + 1
+            toDisplay.append(post)
             if displayed == 20:
                 break
+        displayed = 0
+        for post in reversed(toDisplay):
+            parts = post.split('SPLT')
+            if printPost(parts[0],parts[1]):
+                displayed = displayed + 1
+                if displayed == 20:
+                    break
     else:
         noProfile()
 
